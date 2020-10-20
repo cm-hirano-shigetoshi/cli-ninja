@@ -1,3 +1,5 @@
+THIS_SCRIPT_DIR=${THIS_SCRIPT_DIR-${0:A:h}}
+
 function aws-profile() {
     local profile
     profile=$(cat ~/.aws/config ~/.aws/credentials \
@@ -102,7 +104,7 @@ function override_expand-or-complete() {
 
 function readPathLink() {
     BUF_N=${#BUFFER}
-    B=$(perl $dotfiles/zsh/lib/readPathLink.pl "$BUFFER" $CURSOR)
+    B=$(perl ${THIS_SCRIPT_DIR}/lib/readPathLink.pl "$BUFFER" $CURSOR)
     if [ ! -z $B ]; then
         BUFFER=$B
         CURSOR=$(($CURSOR + ${#BUFFER} - $BUF_N))
