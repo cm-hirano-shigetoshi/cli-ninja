@@ -112,16 +112,6 @@ function readPathLink() {
 }
 zle -N readPathLink
 
-function __expand-buffer() {
-  local result
-  result=$(sh <<< "$BUFFER" | fzf -m -0 -1 -e --ansi | strutil newline -z -r=' ')
-  BUFFER="$result"
-  CURSOR=$#BUFFER
-  zle redisplay
-  typeset -f zle-line-init >/dev/null && zle zle-line-init
-}
-zle -N __expand-buffer
-
 function copyBuffer() {
     echo $BUFFER | tr -d '\n' | pbcopy
 }
@@ -151,6 +141,4 @@ bindkey "^@"    readPathLink
 bindkey "^]"    vi-find-next-char
 # バッファの内容をコピー
 bindkey "^d^b"  copyBuffer
-# バッファを実行して結果をバッファにはりつける
-bindkey '^[e' __expand-buffer
 
