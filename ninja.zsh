@@ -123,7 +123,7 @@ function __expand-buffer() {
 zle -N __expand-buffer
 
 function copyBuffer() {
-    strutil newline -z <<< $BUFFER | pbcopy
+    echo $BUFFER | tr -d '\n' | pbcopy
 }
 zle -N copyBuffer
 
