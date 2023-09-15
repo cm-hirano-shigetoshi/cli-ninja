@@ -1,7 +1,8 @@
-THIS_SCRIPT_DIR=${THIS_SCRIPT_DIR-${0:A:h}}
+NINJA_TOOL_DIR=${NINJA_TOOL_DIR-${0:A:h}}
 
 function aws-profile() {
     local profile
+    local arg=${1-}
     profile=$(cat ~/.aws/config ~/.aws/credentials \
                 | grep '\[' \
                 | sed 's/\[profile /[/' \
@@ -9,8 +10,13 @@ function aws-profile() {
                 | fzf -e +s --no-mouse \
                    --preview="cat ~/.aws/config ~/.aws/credentials | grep -A 5 -F '{}]'" \
                    --preview-window=up \
+                   --query=$arg \
+                   --select-1 \
             )
-    export AWS_PROFILE=${profile}
+    if [[ -n $profile ]]; then
+        echo "AWS_PROFILE=${profile}"
+        export AWS_PROFILE=${profile}
+    fi
 }
 
 function override_backward-word() {
@@ -104,7 +110,7 @@ function override_expand-or-complete() {
 
 function readPathLink() {
     BUF_N=${#BUFFER}
-    B=$(perl ${THIS_SCRIPT_DIR}/lib/readPathLink.pl "$BUFFER" $CURSOR)
+    B=$(perl ${NINJA_TOOL_DIR}/lib/readPathLink.pl "$BUFFER" $CURSOR)
     if [ ! -z $B ]; then
         BUFFER=$B
         CURSOR=$(($CURSOR + ${#BUFFER} - $BUF_N))
